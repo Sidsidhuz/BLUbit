@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="16dp">
+
+    <!-- Status Bar -->
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BLUBIT - Initializing..."
+        android:textColor="#00FF00"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:padding="8dp"
+        android:background="#111111"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Terminal Output -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/terminal_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#000000"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Input Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:textColor="#00FF00"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="8dp" />
+
+        <EditText
+            android:id="@+id/command_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter command..."
+            android:textColor="#FFFFFF"
+            android:textColorHint="#666666"
+            android:background="@android:color/transparent"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:inputType="text"
+            android:imeOptions="actionSend"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:layout_marginStart="8dp"
+            android:minWidth="60dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

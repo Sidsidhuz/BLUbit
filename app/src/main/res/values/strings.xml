@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BLUBIT</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported on this device</string>
+    <string name="bluetooth_required">Bluetooth is required for BLUBIT to work</string>
+    <string name="permissions_required">Bluetooth permissions are required for BLUBIT to work</string>
+    <string name="scanning_devices">Scanning for nearby BLUBIT devices...</string>
+    <string name="no_devices_found">No BLUBIT devices found</string>
+    <string name="connecting_to_device">Connecting to device...</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="connected_to_device">Connected to device</string>
+    <string name="disconnected_from_device">Disconnected from device</string>
+    <string name="message_sent">Message sent</string>
+    <string name="message_received">Message received</string>
+    <string name="encryption_enabled">End-to-end encryption enabled</string>
+    <string name="mesh_network_started">BLUBIT mesh network started</string>
+    <string name="mesh_network_stopped">BLUBIT mesh network stopped</string>
+</resources>
