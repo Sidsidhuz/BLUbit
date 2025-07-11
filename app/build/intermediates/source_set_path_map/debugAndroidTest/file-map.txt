@@ -1,0 +1,6 @@
+com.blubit.test.app-jetified-annotation-experimental-1.3.0-0 C:\Users\91790\.gradle\caches\transforms-3\b02c22c4fa0dd3a174542718e64ee1a1\transformed\jetified-annotation-experimental-1.3.0\res
+com.blubit.test.app-jetified-core-1.5.0-1 C:\Users\91790\.gradle\caches\transforms-3\fdd75417e144ef36b52457a85afc934b\transformed\jetified-core-1.5.0\res
+com.blubit.test.app-androidTest-2 G:\Projects\BLUbit\app\build\generated\res\resValues\androidTest\debug
+com.blubit.test.app-mergeDebugAndroidTestResources-3 G:\Projects\BLUbit\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.blubit.test.app-mergeDebugAndroidTestResources-4 G:\Projects\BLUbit\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.blubit.test.app-merged_res-5 G:\Projects\BLUbit\app\build\intermediates\merged_res\debugAndroidTest

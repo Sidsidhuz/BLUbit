@@ -27,7 +27,7 @@ public class MeshNetworkManager {
     private static final String TAG = "MeshNetworkManager";
     private static final String SERVICE_NAME = "BLUBIT_MESH";
     private static final UUID SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789abc");
-    private static final int DISCOVERY_DURATION = 120; // seconds
+    private static final int DISCOVERY_DURATION = 0; // 0 means forever (system maximum)
     
     private Context context;
     private BluetoothAdapter bluetoothAdapter;
@@ -105,27 +105,37 @@ public class MeshNetworkManager {
         acceptThread.start();
     }
     
-    private void makeDiscoverable() {
+    public void makeDiscoverable() {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION); // 0 means forever, but most Android devices limit to 300 seconds (5 minutes)
         mainActivity.startActivity(discoverableIntent);
+        mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Requested device to become discoverable again."));
     }
     
     public void startDiscovery() {
+        mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] startDiscovery() called"));
         try {
             if (android.os.Build.VERSION.SDK_INT >= 31) {
                 if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_SCAN) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                    mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("BLUETOOTH_SCAN permission not granted"));
+                    mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] BLUETOOTH_SCAN permission not granted"));
                     return;
+                } else {
+                    mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] BLUETOOTH_SCAN permission granted"));
                 }
             }
+            if (bluetoothAdapter == null) {
+                mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] bluetoothAdapter is null!"));
+                return;
+            }
             if (bluetoothAdapter.isDiscovering()) {
+                mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] Already discovering, cancelling first..."));
                 bluetoothAdapter.cancelDiscovery();
             }
             discoveredDevices.clear();
-            bluetoothAdapter.startDiscovery();
+            boolean started = bluetoothAdapter.startDiscovery();
+            mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] startDiscovery() returned: " + started));
         } catch (SecurityException e) {
-            mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("Bluetooth discovery failed: " + e.getMessage()));
+            mainActivity.runOnUiThread(() -> mainActivity.displaySystemMessage("[DEBUG] Bluetooth discovery failed: " + e.getMessage()));
         }
     }
     
@@ -220,29 +230,31 @@ public class MeshNetworkManager {
     private final BroadcastReceiver discoveryReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            
+            mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] BroadcastReceiver onReceive: action=" + action));
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (device != null) {
                     try {
                         if (android.os.Build.VERSION.SDK_INT >= 31) {
                             if (context.checkSelfPermission(android.Manifest.permission.BLUETOOTH_CONNECT) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] BLUETOOTH_CONNECT permission not granted for found device"));
                                 return;
                             }
                         }
                         String name = device.getName();
                         String address = device.getAddress();
-                        // Filter for BLUBIT devices (you might want to implement a better identification method)
-                        if (name != null && name.contains("BLUBIT")) {
-                            discoveredDevices.put(address, device);
-                            mainHandler.post(() -> mainActivity.displaySystemMessage("Found device: " + name + " (" + address + ")"));
-                        }
+                        mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Device found: name=" + name + ", address=" + address));
+                        // Add all discovered devices
+                        discoveredDevices.put(address, device);
+                        mainHandler.post(() -> mainActivity.displaySystemMessage("Found device: " + (name != null ? name : "Unknown") + " (" + address + ")"));
                     } catch (SecurityException e) {
-                        // Ignore device if permission denied
+                        mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] SecurityException in ACTION_FOUND: " + e.getMessage()));
                     }
+                } else {
+                    mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] ACTION_FOUND: device is null"));
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                mainHandler.post(() -> mainActivity.displaySystemMessage("Discovery finished. Found " + discoveredDevices.size() + " BLUBIT devices"));
+                mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Discovery finished. Found " + discoveredDevices.size() + " devices"));
             }
         }
     };
