@@ -24,10 +24,16 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MeshNetworkManager {
+    // Track all device addresses ever connected
+    private final java.util.Set<String> knownDeviceAddresses = java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
+    // Unique node ID for this device
+    private final String nodeId = java.util.UUID.randomUUID().toString();
+    // Track recently seen message IDs to prevent loops
+    private final java.util.Set<String> seenMessageIds = java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
     private static final String TAG = "MeshNetworkManager";
     private static final String SERVICE_NAME = "BLUBIT_MESH";
     private static final UUID SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789abc");
-    private static final int DISCOVERY_DURATION = 0; // 0 means forever (system maximum)
+    private static final int DISCOVERY_DURATION = 120; // seconds
     
     private Context context;
     private BluetoothAdapter bluetoothAdapter;
@@ -107,9 +113,8 @@ public class MeshNetworkManager {
     
     public void makeDiscoverable() {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION); // 0 means forever, but most Android devices limit to 300 seconds (5 minutes)
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERY_DURATION);
         mainActivity.startActivity(discoverableIntent);
-        mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Requested device to become discoverable again."));
     }
     
     public void startDiscovery() {
@@ -173,19 +178,23 @@ public class MeshNetworkManager {
             mainHandler.post(() -> mainActivity.displaySystemMessage("No connected devices"));
             return;
         }
-        
+        // Create a unique message ID
+        String messageId = java.util.UUID.randomUUID().toString();
+        // Build mesh message: MSG:<msgId>:<srcNodeId>:<dstNodeId>:<encrypted>
+        String dstNodeId = "ALL"; // For now, broadcast to all
         for (Map.Entry<String, BluetoothSocket> entry : connectedSockets.entrySet()) {
             String deviceAddress = entry.getKey();
             PublicKey publicKey = devicePublicKeys.get(deviceAddress);
-            
             if (publicKey != null) {
                 String encryptedMessage = cryptographyManager.encryptMessage(message, publicKey);
                 if (encryptedMessage != null) {
-                    sendToDevice(deviceAddress, "MSG:" + encryptedMessage);
+                    String meshMsg = "MSG:" + messageId + ":" + nodeId + ":" + dstNodeId + ":" + encryptedMessage;
+                    sendToDevice(deviceAddress, meshMsg);
                 }
             }
         }
-        
+        // Mark as seen so we don't re-broadcast our own message
+        seenMessageIds.add(messageId);
         mainHandler.post(() -> mainActivity.displayOutgoingMessage(message));
     }
     
@@ -244,9 +253,11 @@ public class MeshNetworkManager {
                         String name = device.getName();
                         String address = device.getAddress();
                         mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Device found: name=" + name + ", address=" + address));
-                        // Add all discovered devices
-                        discoveredDevices.put(address, device);
-                        mainHandler.post(() -> mainActivity.displaySystemMessage("Found device: " + (name != null ? name : "Unknown") + " (" + address + ")"));
+                        // Filter for BLUBIT devices (you might want to implement a better identification method)
+                        if (name != null && name.contains("BLUBIT")) {
+                            discoveredDevices.put(address, device);
+                            mainHandler.post(() -> mainActivity.displaySystemMessage("Found device: " + name + " (" + address + ")"));
+                        }
                     } catch (SecurityException e) {
                         mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] SecurityException in ACTION_FOUND: " + e.getMessage()));
                     }
@@ -254,7 +265,7 @@ public class MeshNetworkManager {
                     mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] ACTION_FOUND: device is null"));
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Discovery finished. Found " + discoveredDevices.size() + " devices"));
+                mainHandler.post(() -> mainActivity.displaySystemMessage("[DEBUG] Discovery finished. Found " + discoveredDevices.size() + " BLUBIT devices"));
             }
         }
     };
@@ -366,17 +377,15 @@ public class MeshNetworkManager {
     private void handleIncomingConnection(BluetoothSocket socket) {
         String deviceAddress = socket.getRemoteDevice().getAddress();
         connectedSockets.put(deviceAddress, socket);
-        
+        knownDeviceAddresses.add(deviceAddress);
         ConnectionThread connectionThread = new ConnectionThread(socket);
         connectionThreads.put(deviceAddress, connectionThread);
         connectionThread.start();
-        
         // Exchange public keys
         String publicKeyString = cryptographyManager.getPublicKeyString();
         if (publicKeyString != null) {
             connectionThread.write(("KEY:" + publicKeyString).getBytes());
         }
-        
         mainHandler.post(() -> mainActivity.displaySystemMessage("Connected to " + deviceAddress));
     }
     
@@ -400,16 +409,81 @@ public class MeshNetworkManager {
         }
         
         public void run() {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[2048];
             int bytes;
-            
+            int reconnectAttempts = 0;
             while (isRunning) {
                 try {
                     bytes = inputStream.read(buffer);
                     String receivedData = new String(buffer, 0, bytes);
-                    handleReceivedData(receivedData);
+                    // Mesh routing: parse and relay if needed
+                    if (receivedData.startsWith("KEY:")) {
+                        String publicKeyString = receivedData.substring(4);
+                        PublicKey publicKey = cryptographyManager.getPublicKeyFromString(publicKeyString);
+                        if (publicKey != null) {
+                            devicePublicKeys.put(deviceAddress, publicKey);
+                            mainHandler.post(() -> mainActivity.displaySystemMessage("Key exchange completed with " + deviceAddress));
+                        }
+                    } else if (receivedData.startsWith("MSG:")) {
+                        String[] parts = receivedData.split(":", 5);
+                        if (parts.length == 5) {
+                            String msgId = parts[1];
+                            String srcId = parts[2];
+                            String dstId = parts[3];
+                            String encrypted = parts[4];
+                            if (!seenMessageIds.contains(msgId)) {
+                                seenMessageIds.add(msgId);
+                                // If this node is the destination or broadcast
+                                if (dstId.equals(nodeId) || dstId.equals("ALL")) {
+                                    String decrypted = cryptographyManager.decryptMessage(encrypted);
+                                    if (decrypted != null) {
+                                        mainHandler.post(() -> mainActivity.displayIncomingMessage("From " + srcId + ": " + decrypted, deviceAddress));
+                                    }
+                                }
+                                // Relay to other nodes except the one we got it from
+                                for (Map.Entry<String, ConnectionThread> entry : connectionThreads.entrySet()) {
+                                    if (!entry.getKey().equals(deviceAddress)) {
+                                        entry.getValue().write(receivedData.getBytes());
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // Non-mesh messages (e.g., key exchange)
+                        handleReceivedData(receivedData);
+                    }
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
+                    // Auto-reconnect logic
+                    if (reconnectAttempts < 3 && isRunning) {
+                        reconnectAttempts++;
+                        final int attemptNum = reconnectAttempts;
+                        mainHandler.post(() -> mainActivity.displaySystemMessage("Connection lost with " + deviceAddress + ". Attempting to reconnect (" + attemptNum + "/3)..."));
+                        try {
+                            Thread.sleep(2000); // Wait 2 seconds before reconnect
+                        } catch (InterruptedException ie) {
+                            // Ignore
+                        }
+                        // Try to reconnect
+                        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
+                        if (device != null) {
+                            ConnectThread reconnectThread = new ConnectThread(device);
+                            reconnectThread.start();
+                        }
+                    } else {
+                        mainHandler.post(() -> mainActivity.displaySystemMessage("Failed to reconnect to " + deviceAddress));
+                        // Try reconnecting to all known devices
+                        for (String addr : knownDeviceAddresses) {
+                            if (!connectedSockets.containsKey(addr)) {
+                                BluetoothDevice dev = bluetoothAdapter.getRemoteDevice(addr);
+                                if (dev != null) {
+                                    mainHandler.post(() -> mainActivity.displaySystemMessage("Attempting to reconnect to known device: " + addr));
+                                    ConnectThread reconnectThread = new ConnectThread(dev);
+                                    reconnectThread.start();
+                                }
+                            }
+                        }
+                    }
                     break;
                 }
             }

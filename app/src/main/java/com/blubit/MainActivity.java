@@ -257,13 +257,9 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void displayStatus() {
-        boolean realDiscoverable = false;
-        if (bluetoothAdapter != null) {
-            realDiscoverable = bluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE;
-        }
         displaySystemMessage("=== BLUBIT Status ===");
         displaySystemMessage("Bluetooth: " + (isBluetoothEnabled ? "Enabled" : "Disabled"));
-        displaySystemMessage("Discoverable: " + (realDiscoverable ? "Yes" : "No"));
+        displaySystemMessage("Discoverable: " + (isDiscoverable ? "Yes" : "No"));
         displaySystemMessage("Connected nodes: " + meshNetworkManager.getConnectedDevicesCount());
         displaySystemMessage("Encryption: AES-256 + RSA");
     }
