@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-38:12
-INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-38:12
-INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-38:12
-INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-38:12
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-39:12
+INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-39:12
+INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-39:12
+INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:2:1-39:12
 MERGED from [com.google.android.material:material:1.10.0] C:\Users\91790\.gradle\caches\transforms-3\15ba1c93ce6ab6bff3d12ea8ee402d24\transformed\material-1.10.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\91790\.gradle\caches\transforms-3\b906c92b55bd91e5bf8895139b074c94\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\91790\.gradle\caches\transforms-3\17f345d3d1e2cd2162a910482c9c4110\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
@@ -91,8 +91,8 @@ ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:16:5-18:35
 	android:name
 		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:17:9-50
 application
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:20:5-36:19
-INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:20:5-36:19
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:20:5-37:19
+INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:20:5-37:19
 MERGED from [com.google.android.material:material:1.10.0] C:\Users\91790\.gradle\caches\transforms-3\15ba1c93ce6ab6bff3d12ea8ee402d24\transformed\material-1.10.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.10.0] C:\Users\91790\.gradle\caches\transforms-3\15ba1c93ce6ab6bff3d12ea8ee402d24\transformed\material-1.10.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\91790\.gradle\caches\transforms-3\b906c92b55bd91e5bf8895139b074c94\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -114,35 +114,37 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\91790\.gradle\cach
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] C:\Users\91790\.gradle\caches\transforms-3\543740e42155bb89dcbd6bdda0f43b68\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:24:9-35
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:25:9-35
 	android:label
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:23:9-41
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:24:9-41
+	android:roundIcon
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:23:9-54
 	tools:targetApi
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:26:9-29
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:27:9-29
 	android:icon
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:22:9-58
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:22:9-43
 	android:allowBackup
 		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:21:9-35
 	android:theme
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:25:9-44
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:26:9-44
 activity#com.blubit.MainActivity
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:27:9-35:20
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:28:9-36:20
 	android:exported
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:29:13-36
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:30:13-36
 	android:theme
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:30:13-48
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:31:13-48
 	android:name
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:28:13-41
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:29:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:31:13-34:29
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:32:13-35:29
 action#android.intent.action.MAIN
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:32:17-69
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:33:17-69
 	android:name
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:32:25-66
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:33:25-66
 category#android.intent.category.LAUNCHER
-ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:33:17-77
+ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:34:17-77
 	android:name
-		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:33:27-74
+		ADDED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml:34:27-74
 uses-sdk
 INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from G:\Projects\BLUbit\app\src\main\AndroidManifest.xml

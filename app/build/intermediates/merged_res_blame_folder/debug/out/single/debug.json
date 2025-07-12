@@ -1,10 +1,70 @@
 [
     {
-        "merged": "com.blubit.app-merged_res-32:/layout_activity_main.xml.flat",
-        "source": "com.blubit.app-main-34:/layout/activity_main.xml"
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\layout_item_terminal_message.xml.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\layout\\item_terminal_message.xml"
     },
     {
-        "merged": "com.blubit.app-merged_res-32:/layout_item_terminal_message.xml.flat",
-        "source": "com.blubit.app-main-34:/layout/item_terminal_message.xml"
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "com.blubit.app-merged_res-32:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.blubit.app-main-34:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "com.blubit.app-merged_res-32:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.blubit.app-main-34:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "com.blubit.app-merged_res-32:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.blubit.app-main-34:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "com.blubit.app-merged_res-32:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.blubit.app-main-34:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.blubit.app-merged_res-32:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.blubit.app-main-34:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-merged_res-32:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\91790\\.gradle\\daemon\\8.0\\com.blubit.app-main-34:\\mipmap-mdpi\\ic_launcher.png"
     }
 ]

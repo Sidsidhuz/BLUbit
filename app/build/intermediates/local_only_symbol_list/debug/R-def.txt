@@ -23,6 +23,8 @@ id terminal_recycler_view
 id timestamp_text
 layout activity_main
 layout item_terminal_message
+mipmap ic_launcher
+mipmap ic_launcher_round
 string app_name
 string bluetooth_not_supported
 string bluetooth_required
