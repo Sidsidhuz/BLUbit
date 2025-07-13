@@ -3,6 +3,7 @@ package com.blubit;
 import android.util.Base64;
 import android.util.Log;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
@@ -16,22 +17,23 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.GCMParameterSpec;
 
 public class CryptographyManager {
     private static final String TAG = "CryptographyManager";
     private static final String RSA_ALGORITHM = "RSA/ECB/PKCS1Padding";
-    private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
+    private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
     private static final int RSA_KEY_SIZE = 2048;
     private static final int AES_KEY_SIZE = 256;
-
+    
     private KeyPair rsaKeyPair;
     private SecretKey aesKey;
-
+    
     public CryptographyManager() {
         generateRSAKeyPair();
         generateAESKey();
     }
-
+    
     private void generateRSAKeyPair() {
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -42,7 +44,7 @@ public class CryptographyManager {
             Log.e(TAG, "Error generating RSA key pair", e);
         }
     }
-
+    
     private void generateAESKey() {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -53,7 +55,7 @@ public class CryptographyManager {
             Log.e(TAG, "Error generating AES key", e);
         }
     }
-
+    
     public String getPublicKeyString() {
         if (rsaKeyPair != null) {
             byte[] publicKeyBytes = rsaKeyPair.getPublic().getEncoded();
@@ -61,7 +63,7 @@ public class CryptographyManager {
         }
         return null;
     }
-
+    
     public PublicKey getPublicKeyFromString(String publicKeyString) {
         try {
             byte[] publicKeyBytes = Base64.decode(publicKeyString, Base64.DEFAULT);
@@ -73,7 +75,7 @@ public class CryptographyManager {
             return null;
         }
     }
-
+    
     public String encryptMessage(String message, PublicKey recipientPublicKey) {
         try {
             // Generate a random AES key for this message
@@ -81,11 +83,14 @@ public class CryptographyManager {
             keyGen.init(AES_KEY_SIZE);
             SecretKey sessionKey = keyGen.generateKey();
 
-            // Encrypt the message with AES
+            // Encrypt the message with AES-GCM
             Cipher aesCipher = Cipher.getInstance(AES_ALGORITHM);
-            aesCipher.init(Cipher.ENCRYPT_MODE, sessionKey);
-            byte[] iv = aesCipher.getIV();
-            byte[] encryptedMessage = aesCipher.doFinal(message.getBytes());
+            byte[] iv = new byte[12]; // 12 bytes is standard for GCM
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(iv);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv); // 128-bit auth tag
+            aesCipher.init(Cipher.ENCRYPT_MODE, sessionKey, gcmSpec);
+            byte[] encryptedMessage = aesCipher.doFinal(message.getBytes(StandardCharsets.UTF_8));
 
             // Encrypt the AES key with RSA
             Cipher rsaCipher = Cipher.getInstance(RSA_ALGORITHM);
@@ -98,7 +103,6 @@ public class CryptographyManager {
             String encryptedMessageB64 = Base64.encodeToString(encryptedMessage, Base64.DEFAULT);
 
             return encryptedKeyB64 + "|" + ivB64 + "|" + encryptedMessageB64;
-
         } catch (Exception e) {
             Log.e(TAG, "Error encrypting message", e);
             return null;
@@ -125,20 +129,19 @@ public class CryptographyManager {
             // Reconstruct AES key
             SecretKey sessionKey = new SecretKeySpec(decryptedAESKey, "AES");
 
-            // Decrypt the message with AES
+            // Decrypt the message with AES-GCM
             Cipher aesCipher = Cipher.getInstance(AES_ALGORITHM);
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            aesCipher.init(Cipher.DECRYPT_MODE, sessionKey, ivSpec);
+            GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+            aesCipher.init(Cipher.DECRYPT_MODE, sessionKey, gcmSpec);
             byte[] decryptedMessage = aesCipher.doFinal(encryptedMessage);
 
-            return new String(decryptedMessage);
-
+            return new String(decryptedMessage, StandardCharsets.UTF_8);
         } catch (Exception e) {
             Log.e(TAG, "Error decrypting message", e);
             return null;
         }
     }
-
+    
     public String signMessage(String message) {
         try {
             Cipher cipher = Cipher.getInstance(RSA_ALGORITHM);
@@ -150,7 +153,7 @@ public class CryptographyManager {
             return null;
         }
     }
-
+    
     public boolean verifySignature(String message, String signature, PublicKey senderPublicKey) {
         try {
             byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
@@ -162,6 +165,28 @@ public class CryptographyManager {
         } catch (Exception e) {
             Log.e(TAG, "Error verifying signature", e);
             return false;
+        }
+    }
+    
+    /**
+     * Get the current public key for this device
+     * @return the public key
+     */
+    public PublicKey getPublicKey() {
+        return rsaKeyPair.getPublic();
+    }
+    
+    /**
+     * Convert a public key to a string for transmission
+     * @param publicKey the public key to convert
+     * @return the key as a Base64 encoded string
+     */
+    public String getPublicKeyAsString(PublicKey publicKey) {
+        try {
+            return Base64.encodeToString(publicKey.getEncoded(), Base64.DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Error converting public key to string: " + e.getMessage());
+            return null;
         }
     }
 }

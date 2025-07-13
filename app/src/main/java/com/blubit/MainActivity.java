@@ -177,9 +177,12 @@ public class MainActivity extends AppCompatActivity {
         displaySystemMessage("Initializing...");
     }
     
+    // Process user command
     private void processCommand() {
         String command = commandInput.getText().toString().trim();
-        if (command.isEmpty()) return;
+        if (command.isEmpty()) {
+            return;
+        }
         
         commandInput.setText("");
         displayUserCommand(command);
@@ -237,8 +240,38 @@ public class MainActivity extends AppCompatActivity {
             case "exit":
                 finish();
                 break;
+            case "msgto":
+                if (parts.length > 1) {
+                    String[] subparts = parts[1].split(" ", 2);
+                    if (subparts.length > 1) {
+                        String targetName = subparts[0];
+                        String msg = subparts[1];
+                        String targetAddress = meshNetworkManager.getConnectedDeviceAddressByName(targetName);
+                        if (targetAddress != null) {
+                            meshNetworkManager.sendMessageToDevice(msg, targetAddress);
+                        } else {
+                            displaySystemMessage("Device not found: " + targetName + ". Use 'nodes' to list connected devices.");
+                        }
+                    } else {
+                        displaySystemMessage("Usage: msgto <name> <message>");
+                    }
+                } else {
+                    displaySystemMessage("Usage: msgto <name> <message>");
+                }
+                break;
+            case "debug":
+                boolean debugEnabled = meshNetworkManager.toggleDebugMode();
+                displaySystemMessage("Debug mode " + (debugEnabled ? "enabled" : "disabled"));
+                break;
+            case "keys":
+                displaySystemMessage("Verifying key exchange with all connected devices...");
+                meshNetworkManager.verifyPublicKeys();
+                break;
+                
             default:
-                displaySystemMessage("Unknown command: " + cmd + ". Type 'help' for available commands.");
+                displaySystemMessage("Unknown command: " + cmd);
+                displaySystemMessage("Available commands: scan, connect <device>, msg <message>, msgto <name> <message>, debug, status, keys, help");
+                break;
         }
     }
     
@@ -254,6 +287,8 @@ public class MainActivity extends AppCompatActivity {
         displaySystemMessage("  nodes       - List connected nodes");
         displaySystemMessage("  clear       - Clear terminal");
         displaySystemMessage("  exit        - Exit application");
+        displaySystemMessage("  debug       - Toggle debug mode on/off");
+        displaySystemMessage("  status      - Show current connection status and node mappings");
     }
     
     private void displayStatus() {
@@ -290,14 +325,12 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void listConnectedNodes() {
-        List<String> connectedDevices = meshNetworkManager.getConnectedDevices();
-        if (connectedDevices.isEmpty()) {
-            displaySystemMessage("No connected nodes");
+        List<String> devices = meshNetworkManager.getConnectedDevicesWithNames();
+        if (devices.isEmpty()) {
+            displaySystemMessage("No connected nodes.");
         } else {
             displaySystemMessage("Connected nodes:");
-            for (String device : connectedDevices) {
-                displaySystemMessage("  " + device);
-            }
+            for (String d : devices) displaySystemMessage("  " + d);
         }
     }
     
