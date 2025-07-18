@@ -1,25 +1,34 @@
-# BLUBIT
+from pathlib import Path
 
-BLUBIT is a lightweight, offline, end-to-end encrypted Bluetooth mesh messaging app for Android with a terminal-like interface. Each device acts as a node, relaying messages to extend range. No internet required.
+# README content
+readme_content = """
+# 🚀 BLUBIT
 
-## Features
-- Terminal-style UI
-- Bluetooth mesh networking
-- End-to-end encryption (AES-256 + RSA)
-- Offline, peer-to-peer messaging
-- Each device acts as a node
+**BLUBIT** is a **lightweight**, **offline**, **end-to-end encrypted** Bluetooth mesh messaging app for Android with a sleek **terminal-style interface**. No internet needed — just devices, Bluetooth, and the spirit of pure P2P communication.
 
-## Usage
-- Grant Bluetooth and location permissions
-- Use terminal commands to scan, connect, send, and broadcast messages
-- Type `help` in the app for available commands
+<p align="center">
+  <img src="https://img.shields.io/badge/Bluetooth-Mesh-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Encryption-AES256+RSA-7a42f4?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Offline%20Mode-Supported-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Platform-Android-orange?style=for-the-badge" />
+</p>
 
-## Build
-Open in Android Studio or build with Gradle:
+---
 
-```
-./gradlew assembleDebug
-```
+## 📱 Features
 
-## License
-MIT License
+- ⚙️ **Terminal-style UI** — Type like a hacker, feel like one.
+- 📡 **Bluetooth Mesh Networking** — Devices relay messages to extend range.
+- 🔒 **End-to-End Encryption** — AES-256 + RSA for secure communication.
+- 📴 **Truly Offline** — No Wi-Fi. No Mobile Data. Just Bluetooth.
+- 🔁 **Mesh Topology** — Every device is a node that helps forward messages.
+
+---
+
+## 🛠️ How to Use
+
+1. 📲 **Install the app** and **grant permissions**:
+   - Bluetooth
+   - Location (required for Bluetooth scanning)
+
+2. ⌨️ Use the built-in terminal commands:
