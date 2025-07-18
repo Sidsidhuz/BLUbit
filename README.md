@@ -1,4 +1,4 @@
-from pathlib import Path
+
 
 # README content
 readme_content = """
